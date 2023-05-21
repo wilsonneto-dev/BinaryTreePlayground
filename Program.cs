@@ -10,6 +10,11 @@ Console.WriteLine("DFS Post Order: " + string.Join(", ", Algorithms.DfsPostOrder
 
 Console.WriteLine("DFS Pre Order: " + string.Join(", ", Algorithms.DfsPreOrder(tree)) + " -- Expected: 1, 2, 4, 5, 3, 6, 7");
 
+Algorithms.BfsPrintNodesAndLevels(tree);
+Algorithms.BfsPrintNodesAndLevels(Algorithms.CreateExampleTreeV2());
+
+// ---------------
+
 record Node(int Value, Node? Left = null, Node? Right = null);
 
 static class Algorithms
@@ -66,6 +71,35 @@ static class Algorithms
         return list;
     }
 
+    
+    internal static void BfsPrintNodesAndLevels(Node node) {
+        if(node is null) 
+        {
+            Console.WriteLine("null...");
+            return;
+        }
+        
+        var queue = new Queue<Node>();
+        queue.Enqueue(node);
+        var level = 0;
+
+        while(queue.Count > 0)
+        {
+            var size = queue.Count;
+            level++;
+            for(int i = 0; i < size; i++)
+            {
+                var current = queue.Dequeue();
+                Console.Write($"(value: {current.Value}, level: {level}, q.size: {size}) ");
+
+                if(current.Left is not null) queue.Enqueue(current.Left);
+                if(current.Right is not null) queue.Enqueue(current.Right);
+            }
+        }
+
+        Console.WriteLine("\n");
+    }
+
     internal static Node CreateExampleTree() => 
         new Node(1, 
             new Node(2, 
@@ -74,4 +108,17 @@ static class Algorithms
             new Node(3, 
                 new Node(6), 
                 new Node(7)));
+
+    internal static Node CreateExampleTreeV2() => 
+        new Node(1, 
+            new Node(2, 
+                new Node(4), 
+                new Node(5,
+                    null,
+                    new Node(8))),
+            new Node(3, 
+                new Node(6), 
+                new Node(7,
+                    null,
+                    new Node(9))));
 }
